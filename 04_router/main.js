@@ -1,7 +1,7 @@
 import express from "express"
 
-import albumRouter from "./router/albumRouter.js"
-import photoRouter from "./router/photoRouter.js"
+import albumRouter from "./routes/albumRouter.js"
+import photoRouter from "./routes/photoRouter.js"
 
 //import data from "./db/data.json" assert { type: "json" };
 
