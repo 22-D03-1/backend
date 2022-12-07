@@ -1,7 +1,7 @@
 import { Low } from 'lowdb'
 import { JSONFile } from 'lowdb/node'
 
-const db = new Low(new JSONFile("db/data.json"))
+const db = new Low(new JSONFile("data/db.json"))
 
 export const getAllPhotos = async (req, res) => {
     await db.read()
