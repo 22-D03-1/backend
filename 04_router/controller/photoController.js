@@ -14,7 +14,7 @@ export const getAllPhotos = async (req, res) => {
 export const getPhoto = async (req, res) => {
     await db.read()
     const value = db.data.photos.find(a => a.id === +req.params.id)
-    
+
     if(!value) {
         res.status(404).send("Not found")
         return
@@ -50,9 +50,11 @@ export const deletePhoto = async (req, res) => {
 
     db.data.photos.splice(index, 1)
 
+    
+
     db.write()
 
-    res.send(`${req.params.id} deleted`)
+    res.status(202).send(`${req.params.id} deleted`)
 }
 
 export const savePhoto = async (req, res) => {

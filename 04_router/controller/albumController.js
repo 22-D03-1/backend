@@ -72,12 +72,12 @@ export const editAlbum = async (req, res, next) => {
      * main.js definiert haben nutzen. Dafür nutzen wir next() um zur nächsten
      * Middleware zu springen.
      * Vorteile: 
-     *      - Weniger redundanten Code
+     *      - Weniger redundanter Code
      *      - bessere Lesbarkeit
      * Nachteile: 
      *      - der 404 handler muss direkt im Anschluss kommen, wenn wir vermeiden wollen,
      *        das andere Middleware auch getriggert wird
-     *      - weniger Möglichkeiten individuelle Fehler Handling zu betreiben
+     *      - weniger Möglichkeiten individuelles Fehler Handling zu betreiben
      */
     if(index < 0) {
         return next()
@@ -89,7 +89,7 @@ export const editAlbum = async (req, res, next) => {
     //Wenn wir unsere lowdb ändern, müssen wir db.write ausführen um in die JSON zu schreiben
     await db.write()
 
-    res.send(`${req.params.id} updated`);
+    res.json(db.data.albums[index]);
 
 }
 
@@ -124,5 +124,5 @@ export const saveAlbum = async (req, res) => {
 
     db.write()
 
-    res.send(`${nextId}`)
+    res.status(201).json(db.data.albums)
 }
