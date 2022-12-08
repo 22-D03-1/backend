@@ -30,27 +30,37 @@ export const getAlbum = async (req, res) => {
      * Die Array Funktion find hilft uns basierend auf unseres Parameter ein Objekt
      * in unserem Array zu finden
      * BEACHTE: Parameter sind vom Format String und unsere ids sind Integer.
-     * Deswegen vor dem Vergleich Number(req.params.id) oder +req.params.id
-     * um sie in eine Zahl umzuwandeln
+     * Deswegen wird vor dem Vergleich Number(req.params.id) oder +req.params.id
+     * um den Parameter in eine Zahl umzuwandeln
      */
     const value = db.data.albums.find(a => a.id === +req.params.id)
+
+    if(!value) {
+        res.status(404).send("Not found")
+        return
+    }
+
     res.json(value)
 }
 
-export const editAlbum = async (req, res) => {
+export const editAlbum = async (req, res, next) => {
     await db.read()
 
     /**
-     * Die Array Funktion findIndex funktioniert wie find nur, dass nicht das
-     * Objekt zurück gegeben wird sondern wo es sich befindet.
+     * Die Array Funktion findIndex funktioniert wie find() nur, dass nicht das
+     * Objekt zurück gegeben wird sondern wo es sich im Array befindet.
      * So können wir es im Array austauschen
      */
     const index = db.data.albums.findIndex(a => a.id === +req.params.id)
 
+    if(index < 0) {
+        return next()
+    }
+
     //Kudos an Rahman für den Vorschlag den doppelten spread Operator zu benutzen
     db.data.albums[index] = { ...db.data.albums[index], ...req.body }
 
-    //Wenn wir unsere lowdb ändern, müssen wir db.write ausführen
+    //Wenn wir unsere lowdb ändern, müssen wir db.write ausführen um in die JSON zu schreiben
     await db.write()
 
     res.send(`${req.params.id} updated`);
@@ -60,6 +70,11 @@ export const editAlbum = async (req, res) => {
 export const deleteAlbum = async (req, res) => {
     await db.read()
     const index = db.data.albums.findIndex(a => a.id === +req.params.id)
+
+    if(index < 0) {
+        res.status(404).send("Not found")
+        return
+    }
 
     // Wie PUT nur, das wir mithilfe des Index mit splice das Element aus dem array löschen
     db.data.albums.splice(index, 1)
@@ -74,9 +89,8 @@ export const saveAlbum = async (req, res) => {
     await db.read()
 
     /**
-     * Wir nutzen map um alle ids zu finden, dann mit Math.max
-     * den größten Wert zu ermitteln. Dieser +1 ist dann unser 
-     * Index für das neue ELement
+     * Wir nutzen map() und Math.max um aus allen den größten Wert zu ermitteln. 
+     * Dieser +1 ist dann unser Index für das neue ELement.
      */
     const nextId = Math.max(...db.data.albums.map(a => a.id)) + 1
     

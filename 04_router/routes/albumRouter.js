@@ -12,7 +12,7 @@ const router = express.Router()
  * Bei RESTful routing benötigen wir immer 5 routen
  * GET für alle, GET für 1, DELETE zum löschen, PUT zum ändern
  * und POST zum erstellen. 
- * Die Funktion die die Anfrage bearbeitet und eine ANtwort zurück
+ * Die Funktion, die die Anfrage bearbeitet und eine Antwort zurück
  * gibt haben wir in den Controller ausgelagert.
  * 
  * BEACHTE: Da wir in der main.js schon angegeben haben, dass der 
