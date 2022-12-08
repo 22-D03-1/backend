@@ -18,6 +18,15 @@ const port = 4000
 
 server.use(express.json()) //JSON parser
 
+
+/**
+ * Wir nutzen das cors npm Paket um den Zugriff auf unseren Server zu erlauben.
+ * CORS steht für cross-origin resource sharing und erlaubt den Zugriff innerhalb der selben Domain.
+ * Das Objekt als Parameter kann auch weg gelassen werden, veranschaulicht aber nochmal, dass wir
+ * von überall Zugriffe erlauben (durch das *) und dass wir hier auch explizit den Zugriff auf 
+ * bestimmte domains limiteren können
+ * 
+ */
 server.use(cors({origin: "*"}))
 
 /**
@@ -36,7 +45,7 @@ server.use((req,res)=>{
 
 server.use((err, req, res, next) => {
     console.log("Ein Fehler ist aufgetreten", err)
-    res.status(500).send("Es liegt nicxt an dir sondern an mir...")
+    res.status(500).send("Es liegt nicht an dir sondern an mir...")
 })
 
 server.listen(port, ()=> {

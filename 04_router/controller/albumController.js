@@ -40,6 +40,18 @@ export const getAlbum = async (req, res) => {
         return
     }
 
+    /**
+     * Während des Live Codings kam der Fehler: "Unexpected end of JSON input"
+     * Diesen haben wir gefixed bekommen indem wir der response explizit gesagt haben,
+     * dass sie vom Typ JSON ist mit
+     * res.set({
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        });
+     * Interessanterweise bestand das Probelm nach dem Neustarten des Servers nicht mehr ^^
+     * Manchmal bleibt es einfach schwarze Magie...
+     */
+
     res.json(value)
 }
 
@@ -53,6 +65,20 @@ export const editAlbum = async (req, res, next) => {
      */
     const index = db.data.albums.findIndex(a => a.id === +req.params.id)
 
+    /**
+     * In Zeile 38 und hier gehen wir mit dem Fall um, dass wir kein Objekt mit
+     * der übergebenen ID gefunden haben. Wir können entweder direkt 404 als 
+     * response senden oder wir können den 404 Handler, den wir als Middleware in 
+     * main.js definiert haben nutzen. Dafür nutzen wir next() um zur nächsten
+     * Middleware zu springen.
+     * Vorteile: 
+     *      - Weniger redundanten Code
+     *      - bessere Lesbarkeit
+     * Nachteile: 
+     *      - der 404 handler muss direkt im Anschluss kommen, wenn wir vermeiden wollen,
+     *        das andere Middleware auch getriggert wird
+     *      - weniger Möglichkeiten individuelle Fehler Handling zu betreiben
+     */
     if(index < 0) {
         return next()
     }

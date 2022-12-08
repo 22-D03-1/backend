@@ -14,7 +14,7 @@ export const getAllPhotos = async (req, res) => {
 export const getPhoto = async (req, res) => {
     await db.read()
     const value = db.data.photos.find(a => a.id === +req.params.id)
-
+    
     if(!value) {
         res.status(404).send("Not found")
         return
