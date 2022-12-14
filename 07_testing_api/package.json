@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "//": "Unser Test Befehl unterscheidet sich von dem gestern, da wir ECMAScript (import anstatt require)",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles --forceExit"
   },
   "keywords": [],
