@@ -9,6 +9,12 @@ import request from "supertest"
  * Wenn der Test geschrieben ist, sollten wir einen Timeout zurück bekommen,
  * da die Route noch nicht definiert ist. Wir bauen dann in unserem Controller nur das,
  * dass unser Test erfolgreich ist.
+ * 
+ * WICHTIG: In der package JSON findest du einen anderen Befehl als "jest"
+ * Das liegt daran, dass hier ECMAScript und nicht commonJS benutzt wird.
+ * Quelle: https://jestjs.io/docs/ecmascript-modules
+ * Außerdem haben wir mit den --detectOpenHandles --forceExit flags angegeben, dass wenn
+ * die Tests abgeschlossen sind jedoch unser Server noch läuft, das Test Skript abgeschlossen werden soll
  */
 
 describe("Hotel Routes Test", ()=>{
@@ -62,6 +68,12 @@ describe("Hotel Routes Test", ()=>{
         //Unsere Rückgabe hat Inhalt
         test("return body with content", () => {
             expect(typeof(response.body)).toBe("object")
+            /**
+             * Neben toBe() gibt uns jest eine ganze Reihe weitere Funktionen um
+             * den zu erwartenen Wert in expect zu vergleichen.
+             * In der Doku findet ihr ein wenig Inspiration, was ihr hier nutzen könnt.
+             * https://jestjs.io/docs/expect
+             */
             expect(response.body.length).toBeGreaterThan(0)
         })
     })
