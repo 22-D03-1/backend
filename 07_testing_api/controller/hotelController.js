@@ -29,4 +29,12 @@ export function editOne(req, res) {}
 
 export function deleteOne(req, res) {}
 
-export function saveOne(req, res) {}
+export function saveOne(req, res) {
+    if(!req.body || Object.keys(req.body).length === 0){
+        res.status(406).send("Error")
+    }
+    else {
+        hotels.push(req.body)
+        res.status(201).send(hotels)
+    }
+}

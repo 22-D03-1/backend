@@ -5,6 +5,8 @@ import hotelRouter from "./routes/hotelRoutes.js"
 const server = express()
 const port = 4000
 
+server.use(express.json())
+
 /**
  * Das ist natürlich eine sehr schlechte und unsichere Security Maßnahme.
  * Wie wir unser Backend sicherer machen, lernen wir in ein paar Wochen.

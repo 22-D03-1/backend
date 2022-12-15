@@ -50,7 +50,7 @@ describe("Hotel Routes Test", ()=>{
          */
 
         //Unsere Route gibt Statuscode 200 zurück
-        test("return 200", () => {
+        test("returns 200", () => {
             expect(response.statusCode).toBe(200)
         })
 
@@ -61,12 +61,12 @@ describe("Hotel Routes Test", ()=>{
          */
 
         //Unsere Route gibt ein JSON zurück
-        test("return JSON", () => {
+        test("returns JSON", () => {
             expect(response.type).toBe("application/json")
         })
 
         //Unsere Rückgabe hat Inhalt
-        test("return body with content", () => {
+        test("returns body with content", () => {
             expect(typeof(response.body)).toBe("object")
             /**
              * Neben toBe() gibt uns jest eine ganze Reihe weitere Funktionen um
@@ -78,14 +78,44 @@ describe("Hotel Routes Test", ()=>{
         })
     })
 
+    describe("Save One Route", () => {
+        //Wenn der request body keinen Inhalt hat, soll ein Fehler kommen
+        test("empty body returns 406", async() => {
+            /**
+             * Wenn wir bei supertest etwas mit unserem Post Request mitschicken wollen
+             * nutzen wir nach post(...) die methode .send({...})
+             */
+            const response = await request(server).post("/hotels?api_key=040").send({})
+            expect(response.statusCode).toBe(406)
+        })
+
+        //Wenn das richtige Objekt übergeben wird, soll 201 kommen
+        test("successful insert gives 201", async()=>{
+            const response = await request(server)
+                .post("/hotels?api_key=040")
+                .send({
+                    id: 3749574593,
+                    name: "Test-Hotel",
+                    city: "Berlin"
+                })
+            expect(response.statusCode).toBe(201)
+        })
+
+        //Wenn ein unbekannter Key im body vorhanden ist, soll 406 kommen
+
+        /**
+         * Versuche es selber mal :-)
+         */
+    })
+
     //Wenn eine unbekannte Route aufgerufen wird soll 404 zurück gegeben werden
-    test("unknown route return 404", async () => {
+    test("unknown route returns 404", async () => {
         const response = await request(server).get("/erliuzfgherilufhlewri?api_key=040")
         expect(response.statusCode).toBe(404)
     })
 
     //Wenn kein oder ein falscher API Key übermittelt wird soll 401 zurück gegeben werden
-    test("wrong API key return 401", async () => {
+    test("wrong API key returns 401", async () => {
         const response = await request(server).get("/?api_key=egitarre")
         expect(response.statusCode).toBe(401)
     })
