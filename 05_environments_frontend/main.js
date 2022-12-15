@@ -19,7 +19,7 @@ import photoRouter from "./routes/photoRouter.js"
 const server = express()
 // Anstatt den Port im Code festzulegen, greifen wir auf die Umgebungsvariable PORT zu.
 // So lässt sich der Port in jeder Umgebung individuell anpassen, ohne den Code zu verändern.
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
 server.use(express.json())
 
