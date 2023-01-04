@@ -16,8 +16,8 @@ und am Ende eures Statements an das Semikolon
 CREATE TABLE album (
   /*
   Im Gegensatz zu MongoDB müssen wir explizit der Tabelle eine ID geben. Diese ist in der Regel ein INTEGER
-  Dann müssen wir angeben, dass es unser Schlüssel ist, also wir die Teile darüber identifizieren können mit PRIMARY KEY
-  Außerdem können wir mit AUTO_INCREMENT definieren, dass wenn wir nicht sagen was die ID ist es automatisch 1 hochgezählt wird-
+  Dann müssen wir angeben, dass es unser Schlüssel ist, also wir die Zeile darüber identifizieren können, mit PRIMARY KEY
+  Außerdem können wir mit AUTO_INCREMENT definieren, dass wenn wir nicht sagen was die ID ist es automatisch 1 hochgezählt wird.
   */
   id INT primary key auto_increment,
   /* Innerhalb der Klammern können wir angeben, auf welche Zeichenanzahl wir die Spalte limitieren */
@@ -47,7 +47,7 @@ CREATE TABLE foto (
   In unserem relationalem Datenbank Design haben wir zwischen den Fotos und den anderen Tabellen eine 1:n Beziehung definiert.
   Um diese in SQL abzubilden speichern wir den Fremdschlüssel der 1 Tabelle (Ein Foto kann nur einen Fotograf haben) 
   in der n Tabelle (Ein Fotograf kann mehrere Fotos schiessen).
-  Wir geben dann ein neues Attribut mit Datentyo an, idR tabellenname_schlüssel, gefolt von REFERNCES um zu sagen, dieser Wert verweist auf
+  Wir geben dann ein neues Attribut mit Datentyp an, idR tabellenname_schlüssel, gefolt von REFERNCES um zu sagen, dieser Wert verweist auf
   eine andere Tabelle mit dem Tabellennamen und dem Schlüssel
   */
   album_id int references album(id),
