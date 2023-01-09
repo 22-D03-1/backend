@@ -23,10 +23,50 @@ export const getOne = async (req, res) => {
     res.json(report);
 };
 
+// PUT
+export const replace = async (req, res) => {
+    const id = req.params.id;
+    const document = { ...req.body };
+
+    // Da wir mit PUT einen Datensatz ersetzen wollen.
+    // verwenden wir in MongoDB die Methode replaceOne().
+    // Wir übergeben einen Filter wie bei find, findOne, deleteOne,...
+    // Zusätzlich übergeben wir das neue Dokument,
+    // welches das bisherige ersetzen soll.
+    const result = await collection.replaceOne(
+        { _id: ObjectId(id) },
+        document,
+        // {
+        //     // wollen wir einen Datensatz, den wir nicht gefunden haben, neu anlegen,
+        //     // können wir dies mit der Option upsert: true machen.
+        //     // upsert liefert uns als result eine Übersicht,
+        //     // ob ein Datensatz aktualisiert oder angelegt wurde.
+        //     upsert: true,
+        // },
+    );
+
+    res.status(200).json(result); // eigentlich 204, wegen result aber "nur" 200
+}
+
+// PATCH
 export const update = async (req, res) => {
     const id = req.params.id;
-    // TODO
-    res.status(204).end();
+    const data = { ...req.body };
+
+    // Bei PATCH Requests wollen wir einen Datensatz nur modifizieren.
+    // Daher verwenden wir hier die Methode updateOne().
+    // Wie auch bei replaceOne() übergeben wir hier zuerst einen Filter.
+    // Danach folgt allerdings ein Objekt mit sog. "Field Update Operators".
+    // Geben wir $set den Wert unserer neuen Properties,
+    // Wird das Dokument um diese Properties erweitert oder - falls bereits vorhanden - geändert.
+    const result = await collection.updateOne(
+        { _id: ObjectId(id) },
+        {
+            $set: data,
+        },
+    );
+
+    res.status(200).json(result); // eigentlich 204, wegen result aber "nur" 200
 }
 
 export const remove = async (req, res) => {
