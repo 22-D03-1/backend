@@ -7,7 +7,7 @@ Der Grundbefehl um Daten abzufragen ist SELECT gefolgt von den Spalten/Attribute
 Wenn wir * benutzen wollen wir alle Attribute haben. Ansonsten können wir diese mit Komma getrennt aufzählen.
 Danach sagen wir aus welcher Tabelle wir die Daten haben wollen mit FROM gefolgt von dem Datennamen.
 
-Ähnlich wie die anderen SQL Bewfehle liest es sich wie normales englisch:
+Ähnlich wie die anderen SQL Befehle liest es sich wie normales englisch:
 select name from album. Zu deutsch: Wähle Namen aus Album
 */
 
@@ -20,7 +20,7 @@ FROM album;
 /*
 Wir sind außerdem in der Lage unsere Abfrage zu filtern also an eine Bedingung zu knüpfen. Ähnlich wie in
 Javascript if. Dafür nutzen wir WHERE und dann den Vergleich den wir machen wollen.
-WHERE id=1 gibt nur die ein einen Eintrag mit der Id 7
+WHERE id=1 gibt nur den einen einen Eintrag mit der Id 7
 WHERE preis > 14 gibt alle Einträge, die einen Preis haben der größer ist als 14
 WHERE thema = "people" gibt alle Einträge bei dem das Thema people angegeben wurde
 */
@@ -42,7 +42,7 @@ FROM fotograf
 WHERE wohnort="Hamburg" OR wohnort="Berlin";
 
 /*
-Wenn wir für Zahlen den Bereich einschränekn wollen als von bis können wir den SQL Befehl BETWEEN nutzen.
+Wenn wir für Zahlen den Bereich einschränken wollen als von bis können wir den SQL Befehl BETWEEN nutzen.
 Im Beispiel werden alle Fotos ausgegeben deren Preis größer als 40 und kleiner als 150 sind.
 Wieder liesst es sich genau wie geschrieben:
 select preis, speicherort from foto where preis between 40 and 150.
@@ -130,7 +130,8 @@ FROM kamera;
 
 /*
 AGGREGATION
-SQL gibt uns auch die Möglichkeit Berechnungen auf unsere Daten anzuwenden. Hier ein paar Beispiele für 12, 6, 5
+SQL gibt uns auch die Möglichkeit Berechnungen auf unsere Daten anzuwenden. 
+Hier ein paar Beispiele für Preis 12, 6, 5
 */
 
 /*
@@ -206,7 +207,7 @@ ON album_id = album.id
 Wenn wir mehrere Fremdschlüssel haben, können wir auch mehrere Tabellen miteinander kombinieren.
 Außerdem können wir weiterhin filtern und nur bestimmte Attribute auswählen.
 
-Da wir aus mehreren Tabellen mehrere Attribute mit dem selben Namen haben können müssen wir diese
+Da wir aus mehreren Tabellen mehrere Attribute mit dem selben Namen haben können, müssen wir diese
 genau bennennen mit einer ähnlichen Notation wie Javascript Objekte: tabellenname.attributname
 */
 SELECT speicherort, kamera.marke, kamera.model, fotograf.name
