@@ -8,7 +8,8 @@ router
     .get("/:photoId", controller.getPhoto)
     .post("/", controller.createPhoto)
     .put("/:photoId", controller.editPhoto)
-    .delete("/:deleteId", controller.deletePhoto)
+    .delete("/:photoId", controller.deletePhoto)
+    .post("/newFake", controller.createFake)
 
 export default router
 
