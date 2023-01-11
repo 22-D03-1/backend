@@ -10,3 +10,12 @@ const schema = new mongoose.Schema({
     },
     theme: String
 })
+
+//Model: Photo -> Collection: photos
+const Photo = mongoose.model("Photo", schema)
+
+export const create = async () => {}
+export const getAll = async () => {}
+export const getOne = async () => {}
+export const editOne = async () => {}
+export const deleteOne = async () => {}
