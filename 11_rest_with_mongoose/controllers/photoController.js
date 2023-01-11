@@ -1,6 +1,13 @@
 import * as Photo from "../models/Photo.js"
 import { faker } from '@faker-js/faker';
 
+/**
+ * Für jede Router haben wir einen Controller
+ * Jeder Controller ruft dann die Methode aus unserem Model auf, der den dazugehörigen
+ * Datenbankzugriff macht.
+ * Was bisher noch fehlt ist Error handling, falls unvollständige/fehlerhafte Daten übergeben
+ * oder zurückgegeben werden.
+ */
 
 export const createPhoto = async (req, res) => {
     const result = await Photo.create(req.body)
@@ -42,6 +49,12 @@ export const deletePhoto = async (req, res) => {
 
     res.status(204).send("Erfolgreich gelöscht")
 }
+
+/**
+ * Da es häufig mühsam ist für unsere Datenbank Daten einzugeben, können wir das Paket Faker nutzen,
+ * das uns zufällige aber verlässliche Daten erzeugt. Schaut euch am besten mal die Doku von Faker an
+ * welche Daten ihr alle erstellen könnt: https://fakerjs.dev/api/
+ */
 
 export const createFake = async (req, res) => {
     
