@@ -17,6 +17,7 @@ const errorSwitch = (err) => {
             break
         default:
             err.statusCode = 400
+            err.message = "Überprüfe deine Eingabe"
     }
     return err
 }
