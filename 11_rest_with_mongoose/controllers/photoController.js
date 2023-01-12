@@ -9,45 +9,79 @@ import { faker } from '@faker-js/faker';
  * oder zurückgegeben werden.
  */
 
-export const createPhoto = async (req, res) => {
-    const result = await Photo.create(req.body)
-    res.status(201).json(result)
+const errorSwitch = (err) => {
+    switch(err.path) {
+        case "_id":
+            err.statusCode = 404
+            err.message = "ID nicht gefunden"
+            break
+        default:
+            err.statusCode = 400
+    }
+    return err
 }
 
-export const getAllPhotos = async (req, res) => {
-    const result = await Photo.getAll()
-    res.status(200).json(result)
+export const createPhoto = async (req, res, next) => {
+    try {
+        const result = await Photo.create(req.body)
+        res.status(201).json(result)
+    } catch(err) {
+       next(errorSwitch(err))
+    }
 }
 
-export const getPhoto = async (req, res) => {
-    const result = await Photo.getOne(req.params.photoId)
-    if (!result) {
-        res.status(404).send("nicht da digga")
-        return
-    } 
-    res.status(200).json(result)
+export const getAllPhotos = async (req, res, next) => {
+    try {
+        const result = await Photo.getAll()
+        res.status(200).json(result)
+    } catch (err) {
+        next(errorSwitch(err))
+    }
 }
 
-export const editPhoto = async (req, res) => {
-    const result = await Photo.editOne(req.params.photoId, req.body)
-    
-    if (!result) {
-        res.status(404).send("nicht da digga")
-        return
-    } 
-    
-    res.status(201).json(result)
+export const getPhoto = async (req, res, next) => {
+    // falsche Id
+    try {
+        const result = await Photo.getOne(req.params.photoId)
+        res.status(200).json(result)
+    } catch(err) {
+        next(errorSwitch(err))
+    }
 }
 
-export const deletePhoto = async (req, res) => {
-    const result = await Photo.deleteOne(req.params.photoId)
-    console.log(result)
-    if (!result) {
-        res.status(404).send("nicht da digga")
+export const updatePhoto = async (req, res, next) => {
+    //fehlerhafter Wert wird gespeichert
+    //fehlerhafte Id
+
+    if (Object.keys(req.body).length === 0) {
+        res.status(204).send()
         return
     }
 
-    res.status(204).send("Erfolgreich gelöscht")
+    try {
+        const result = await Photo.updateOne(req.params.photoId, req.body)
+        res.status(201).json(result)
+    } catch (err) {
+        next(errorSwitch(err))
+    }
+}
+
+export const replacePhoto = async (req, res, next) => {
+    try {
+        const result = await Photo.replaceOne(req.params.photoId, req.body)
+        res.status(201).json(result)
+    } catch (err) {
+        next(errorSwitch(err))
+    }
+}
+
+export const deletePhoto = async (req, res, next) => {
+    try {
+        await Photo.deleteOne(req.params.photoId)
+        res.status(204).send()
+    } catch (err) {
+        next(errorSwitch(err))
+    }
 }
 
 /**

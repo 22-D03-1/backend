@@ -15,6 +15,13 @@ const schema = new mongoose.Schema({
     date: Date,
     url: {
         type: String,
+        validate: {
+            validator: (v) =>{
+                const val = v.startsWith("http") || v.startsWith("www")
+                return val
+            },
+            message: "Bitte übergebe eine richtige URL"
+        },
         required: true,
         unique: true
     },
@@ -25,10 +32,13 @@ const schema = new mongoose.Schema({
 const Photo = mongoose.model("Photo", schema)
 
 export const create = async ({price, date, url, theme}) => {
+    // Erforderliche Daten nicht übergeben haben
+    // Falscher Datentyp
+    // Duplikat
     const newPhoto = new Photo({price, date, url, theme})
-
     const result = await newPhoto.save()
     return result
+
 }
 
 export const getAll = async () => {
@@ -58,7 +68,7 @@ export const getOne = async (photoId) => {
     return photo
 }
 
-export const editOne = async (photoId, data) => {
+export const updateOne = async (photoId, data) => {
     /**
      * findById kann direkt weiterverwendet werden um einen Eintrag zuändern. Dafür wird das
      * Objekt erst mit der gefunden und dann geändert: finde mit id und ändere -> find by id and update
@@ -67,8 +77,19 @@ export const editOne = async (photoId, data) => {
      * geänderte Eintrag zurück gegeben. Ansonsten ist der false und der EIntrag vor Änderung wird zurück gegeben
      * Ob ihr den neuen oder das alten EIntrag möchtet kommt ganz darauf an, was ihr mit den Daten machen wollt.
      */
-    const photo = await Photo.findByIdAndUpdate(photoId, data, {new: true})
+    const photo = await Photo.findByIdAndUpdate(photoId, data, {
+        new: true,
+        runValidators: true
+    })
 
+    return photo
+}
+
+export const replaceOne = async (photoId, data) => {
+    const photo = await Photo.findOneAndReplace({_id: photoId}, data, {
+        returnDocument: "after",
+        runValidators: true
+    })
     return photo
 }
 

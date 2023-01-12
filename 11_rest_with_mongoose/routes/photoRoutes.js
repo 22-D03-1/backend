@@ -7,7 +7,8 @@ router
     .get("/", controller.getAllPhotos)
     .get("/:photoId", controller.getPhoto)
     .post("/", controller.createPhoto)
-    .put("/:photoId", controller.editPhoto)
+    .patch("/:photoId", controller.updatePhoto)
+    .put("/:photoId", controller.replacePhoto)
     .delete("/:photoId", controller.deletePhoto)
     .post("/newFake", controller.createFake)
 
