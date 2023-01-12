@@ -9,6 +9,13 @@ import { faker } from '@faker-js/faker';
  * oder zurückgegeben werden.
  */
 
+/**
+ * Im Falle eines Fehlers, möchten wir mithilfe eines switches unterscheiden, was für ein Fehler 
+ * aufgetreten ist. Tritt der Fehler auf unsere ID auf, dann wurde diese nicht gefunden oder im falschen
+ * Format übergeben. Dafür nutzen wir den Fehlercode 404.
+ * Für alle anderen Fehler, die unser Validator wirft, gehen wir von einer fehlerhaften Eingabe aus und
+ * nutzen Fehlercode 400.
+ */
 const errorSwitch = (err) => {
     switch(err.path) {
         case "_id":
@@ -23,6 +30,10 @@ const errorSwitch = (err) => {
 }
 
 export const createPhoto = async (req, res, next) => {
+    /**
+     * Jeden Zugriff auf unser Model packen wir jetzt in ein try catch um etwaige Fehler
+     * an unseren Error Handler zu senden
+     */
     try {
         const result = await Photo.create(req.body)
         res.status(201).json(result)

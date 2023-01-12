@@ -13,8 +13,9 @@ app.use(express.json())
 
 /*
 
-Throw new Error klappt in der Middleware und wird von dem Erroro Handler
-abgefangen. Jedoch nicht in unserer Asynchronen Controller Funktion.
+Throw new Error klappt in der Middleware und wird von dem Error Handler
+abgefangen. Jedoch nicht in unserer Asynchronen Controller Funktion, da Express nicht weiß,
+wie es mit einem rejecteden Promise umgehen soll.
 
 app.use((req, res, next) => {
     throw new Error("mist")
@@ -22,6 +23,12 @@ app.use((req, res, next) => {
 */
 
 app.use("/photos", photoRouter)
+
+/**
+ * Wir implementieren einen Error Handler am Ende unserer Routen und Middleware, der alle Fehler
+ * abfangen soll. Daher geben wir ihm einen flexiblen Statuscode. Wir setzen ihn nur 500,
+ * falls kein anderer Statuscode von uns gesetzt wurde.
+ */
 
 app.use((err, req, res, next) => {
     console.log(err)

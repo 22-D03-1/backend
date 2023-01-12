@@ -16,6 +16,16 @@ const schema = new mongoose.Schema({
     url: {
         type: String,
         validate: {
+            /**
+             * Mongoose gibt uns die Möglichkeit eingegebene Daten zu validieren, bevor wir sie
+             * in MongoDB speichern. Dafür müssen wir dem Feld ein validate attribut geben.
+             * Innherlab von validate haben wir den validator, das ist eine Funktion, die das zu speichernde
+             * Feld empfängt und einen boolean zurück gibt. True wenn alles passt, False falls nicht.
+             * Wir checken also, ob unsere URL entweder mit http oder www beginnt. 
+             * Um noch bessere validierung zu machen, sollten wir Regex nutzen.
+             * Außerdem hat validate noch die Möglichkeit eine Nachricht zu verfassen, falls der validator
+             * false zurück gibt
+             */
             validator: (v) =>{
                 const val = v.startsWith("http") || v.startsWith("www")
                 return val
@@ -77,19 +87,31 @@ export const updateOne = async (photoId, data) => {
      * geänderte Eintrag zurück gegeben. Ansonsten ist der false und der EIntrag vor Änderung wird zurück gegeben
      * Ob ihr den neuen oder das alten EIntrag möchtet kommt ganz darauf an, was ihr mit den Daten machen wollt.
      */
-    const photo = await Photo.findByIdAndUpdate(photoId, data, {
-        new: true,
-        runValidators: true
-    })
+    const photo = await Photo.findByIdAndUpdate(
+        photoId, 
+        data, {
+            new: true,
+            /** Die Validatoren unseres Schema (unique, required und unsere erstellten) wendet mongoose nur 
+             * beim Erstellen an. Wenn wir möchten, dass auch bei updates und replaces die Eingabe überprüft wird,
+             * müssen wir in den Optionen runValidators auf true setzen.
+             * */
+            runValidators: true
+        })
 
     return photo
 }
 
 export const replaceOne = async (photoId, data) => {
-    const photo = await Photo.findOneAndReplace({_id: photoId}, data, {
-        returnDocument: "after",
-        runValidators: true
-    })
+    const photo = await Photo.findOneAndReplace(
+        {
+            _id: photoId
+        }, 
+        data,
+        {
+            //returnDocument: "after" hat den selben Effekt wie new: true. Ich schätze legacy code, dass zwei verschiedene genutzt werden
+            returnDocument: "after",
+            runValidators: true
+        })
     return photo
 }
 
