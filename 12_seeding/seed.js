@@ -37,7 +37,7 @@ import "./lib/mongoose.js";
 // Wir lagern die einzelnen Schritte in Teilfunktionen aus.
 // So behalten wir den Überblick und können die Schritte besser debuggen,
 // wenn mal etwas schiefgehen sollte.
-const deleteAll = async () => {
+const deleteReports = async () => {
     // Wir löschen alle Einträge aus der Collection "reports" mittels deleteMany()
     return await Report.deleteMany();
 }
@@ -58,24 +58,26 @@ const createReport = async () => {
 // Da wir mehr als nur einen Datensatz erzeugen wollen,
 // lassen wir in dieser Funktion eine Schleife mit createReport() laufen.
 // Über den Parameter count können wir die Anzahl der Datensätze verändern.
-const createReports = async (count = 1) => {
+const createReports = async (count = 20) => {
     for (let i = 0; i < count; i++) {
         console.log("creating report: ", i + 1);
         await createReport();
     }
 }
 
-
 // In diesem try/catch Block läuft unsere Hauptlogik ab.
 // Hier rufen wir die oben definierten Funktionen auf.
 // Durch die Trennung behalten wir den Überblick.
 try {
-    console.log("deleting all records...");
-    await deleteAll();
-    console.log("done.");
+    if (!process.argv.includes("doNotDelete")) {
+        console.log("deleting all records...");
+        await deleteReports();
+        console.log("done.");
+    }
 
     console.log("creating new records...");
-    await createReports(10);
+    const count = process.argv[2] === "doNotDelete" ? undefined : process.argv[2];
+    await createReports(count);
     console.log("done.");
 
     console.log("seeding finished. happy coding!");
