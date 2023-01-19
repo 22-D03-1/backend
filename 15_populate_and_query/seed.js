@@ -60,9 +60,6 @@ const createPhotographer = async () => {
     photographers.push(result["_id"])
 }
 
-// Da wir mehr als nur einen Datensatz erzeugen wollen,
-// lassen wir in dieser Funktion eine Schleife mit createReport() laufen.
-// Über den Parameter count können wir die Anzahl der Datensätze verändern.
 const createData = async (count = 20) => {
     for (let i = 0; i < count; i++) {
         await createPhotographer();
@@ -74,9 +71,6 @@ const createData = async (count = 20) => {
     }
 }
 
-// In diesem try/catch Block läuft unsere Hauptlogik ab.
-// Hier rufen wir die oben definierten Funktionen auf.
-// Durch die Trennung behalten wir den Überblick.
 try {
     if (!process.argv.includes("doNotDelete")) {
         console.log("deleting all records...");
