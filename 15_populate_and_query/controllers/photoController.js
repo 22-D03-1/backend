@@ -43,8 +43,15 @@ export const createPhoto = async (req, res, next) => {
 }
 
 export const getAllPhotos = async (req, res, next) => {
+    const {page = 1, limit = 100} = req.query
+
+    if (limit > 100) {
+        res.status(400).send("Maximum limit is 100")
+        return next()
+    }
+
     try {
-        const result = await Photo.getAll()
+        let result = await Photo.getFiltered(+page, +limit)
         res.status(200).json(result)
     } catch (err) {
         next(errorSwitch(err))

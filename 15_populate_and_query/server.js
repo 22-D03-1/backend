@@ -19,6 +19,16 @@ app.use("/photos", photoRouter)
  * falls kein anderer Statuscode von uns gesetzt wurde.
  */
 
+/*
+
+Sollte es zu einem Fehler kommen, sollten wir return next()
+ausführen anstatt nur return, um sicher zu gehen, dass alle folgenden 
+middlewares noch erreicht werden.
+
+app.use((req, res, next) => {
+    console.log("hallo am ende")
+})*/
+
 app.use((err, req, res, next) => {
     console.log(err)
     const statusCode = err.statusCode || 500

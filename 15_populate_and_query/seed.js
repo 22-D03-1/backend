@@ -68,7 +68,7 @@ const createData = async (count = 20) => {
         await createPhotographer();
         await createAlbum()
 
-        for (let j=0; j < 10; j++) {
+        for (let j=0; j < 30; j++) {
             await createPhoto(photographers[i], albums[i])
         }
     }

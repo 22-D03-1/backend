@@ -14,7 +14,7 @@ const schema = new mongoose.Schema({
             message: "Bitte übergebe eine richtige URL"
         },
         required: true,
-        unique: true
+        //unique: true
     },
     theme: String,
     photographer: {
@@ -59,11 +59,7 @@ export const create = async ({price, date, url, theme}) => {
 
 }
 
-export const getAll = async () => {
-
-    const photos = await Photo
-        .find()
-        /**
+/**
          * Wir speichern in unserem Model nur die ID, des Objekts auf das wir verweisen.
          * Wenn wir dann ein normalen find() machen, dann bekommen wir auch nur die ID
          * Um auch die Informationen aus der anderen Collection möchten dann können wir
@@ -77,8 +73,72 @@ export const getAll = async () => {
          * Die Id, die unter _id gespeichert wird, bekommen wir jedesmal, außer wir sagen explizit,
          * dass wir sie nicht möchten mit -_id
          */
+
+export const getAll = async () => {
+
+    const photos = await Photo
+        .find()
         .populate("photographer", "-_id name email")
     return photos
+}
+
+/**
+ * 
+ * return result.map((el,i) => {    
+        return {
+            ...el._doc,
+            count: i
+        }
+    })
+ */
+
+export const getFiltered = async (page, limit) => {
+    let result
+
+    result = await Photo.find({theme: "freak"})
+
+    result = await Photo.where("theme").equals("freak")
+
+    result = await Photo.find({price: {$gt: 900}})
+
+    result = await Photo.find({price: {$lt: 100}})
+
+    result = await Photo.find({price: {$lte: 97}})
+
+    result = await Photo.where("price").gt(900)
+
+    result = await Photo.find({price: {$gt: 300, $lt: 310}})
+
+    result = await Photo.where("price").gt(300).lt(310)
+
+    result = await Photo.where("theme").ne("rhubarb")
+
+    result = await Photo.where("theme").in(["fisherman", "tennis"])
+
+    result = await Photo.where("theme").regex(/^m.*/)
+
+    result = await Photo.where("price").gt(900).limit(10)
+
+    result = await Photo.where("price").gt(900).sort("price")
+
+    result = await Photo.where("price").gt(900).sort({price: -1})
+
+    result = await Photo.find().sort({price: -1}).limit(1)
+
+    result = await Photo.find().sort({theme: -1})
+
+    result = await Photo.find()
+        .skip((page - 1) * limit)
+        .limit(limit)
+
+    const count = await Photo.count()
+
+    return {
+        currentPage: page,
+        totalPages: count / limit,
+        limit,
+        result
+    }
 }
 
 export const getOne = async (photoId) => {
