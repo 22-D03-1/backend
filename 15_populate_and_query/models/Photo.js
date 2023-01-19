@@ -60,7 +60,7 @@ export const create = async ({price, date, url, theme}) => {
 }
 
 /**
-         * Wir speichern in unserem Model nur die ID, des Objekts auf das wir verweisen.
+         * Wir speichern bei einer Referenz in unserem Model nur die ID, des Objekts auf das wir verweisen.
          * Wenn wir dann ein normalen find() machen, dann bekommen wir auch nur die ID
          * Um auch die Informationen aus der anderen Collection möchten dann können wir
          * populate() benutzten also das "bevölkern" unserer Id. 
@@ -83,6 +83,11 @@ export const getAll = async () => {
 }
 
 /**
+ * Ein Beispiel wie wir unseren Einträgen zusätzliche Felder hinzufügen könnten, wie
+ * den index des Elements.
+ * 
+ * Aufgepasst: Nach dem map müssen wir innerhalb des spread operator nur das _doc Feld zurück
+ * geben, da wir sonst noch weitere Felder von Mongoose bekommen.
  * 
  * return result.map((el,i) => {    
         return {
@@ -92,13 +97,41 @@ export const getAll = async () => {
     })
  */
 
+/**
+ * Nur find() zu nutzen bedeutet, alle Einträge zu bekommen, in der Reihenfolge in der sie gespeichert wurden.
+ * Mongoose und Mongodb geben uns die Möglichkeit verschiedene Methoden zu nutzen um unsere EInträge zu filtern.
+ * Das funktioniert analog zu dem WHERE statement in SQL.
+ */
+
 export const getFiltered = async (page, limit) => {
     let result
 
+    /**
+     * Wir können mithilfe von MongoDB Syntax filtern. Dafür sammeln wir in einem Objekt, nach was wir filtern
+     * möchten. In diesem Beispiel möchten wir die Fotos die als theme "freak haben"
+     */
     result = await Photo.find({theme: "freak"})
 
+    /**
+     * In mongoose Syntax folgen wir ein wenig besser lesbar was unsere filter sind. Das Beispiel macht
+     * das gleich wie oben. Wir nutzen where() um das Feld für den Filter zu definieren und equals
+     * (zu deutsch ist gleich) wie wir filtern wollen
+     */
     result = await Photo.where("theme").equals("freak")
 
+    /**
+     * Wenn wir einen numerischen Wert vergleichen wollen, dann machen wir in MongoDB Syntax das mit einem
+     * weiteren Objekt, dass die Vergleichsoperatoren beinhaltet.
+     * $gt steht für greater than (größer als)
+     * $lt steht für less than (kleiner als)
+     * $gte und $lte steht für greater than or equal (größer als oder gleich)
+     * 
+     * Mongoose gibt uns zusammen mit where() diese Operationen auch als Methoden
+     * 
+     * Außerdem können wir größer als und kleiner als auch kombinieren.
+     * Entweder als zwei Werte in unserem Vergleichsobjekt (MongoDB)
+     * oder zwei aufeinander folgenden Methoden (mongoose)
+     */
     result = await Photo.find({price: {$gt: 900}})
 
     result = await Photo.find({price: {$lt: 100}})
@@ -111,11 +144,31 @@ export const getFiltered = async (page, limit) => {
 
     result = await Photo.where("price").gt(300).lt(310)
 
+    /**
+     * Weitere wichtige vergleichsoperationen sind:
+     * ne -> not equal also nicht gleich
+     * in -> Also ob der Wert einem der angegeben Werte in einem Array entspricht
+     * regex -> String vergleichsoperator
+     */
+
     result = await Photo.where("theme").ne("rhubarb")
 
     result = await Photo.where("theme").in(["fisherman", "tennis"])
 
     result = await Photo.where("theme").regex(/^m.*/)
+
+    /**
+     * Mit limit() können wir außerdem begrenzen, wie viele EInträge wir zurückhaben möchten
+     * Funktioniert mit where() oder nur mit find()
+     * 
+     * Mit sort() können wir außerdem ein Feld angeben nach dem wir die Einträge sortieren.
+     * Wenn wir nur den Feldnnamen übergeben, dann sortiert er aufsteigend und mithilfe eines
+     * Objekts und -1 sortieren wir absteigend
+     * 
+     * Die Kombination aus sort() und limit() ist nützlich um bspw. nur den größten Wert zu erhalten
+     * 
+     * Strings werden alphabetisch geordnet
+     */
 
     result = await Photo.where("price").gt(900).limit(10)
 
@@ -126,6 +179,16 @@ export const getFiltered = async (page, limit) => {
     result = await Photo.find().sort({price: -1}).limit(1)
 
     result = await Photo.find().sort({theme: -1})
+
+    /**
+     * --PAGINATION TEIL 2--
+     * Mithilfe der Query Werte page und limit können wir jetzt Pagination anwenden
+     * skip() überspringt eine Anzahl an Einträge. für Page 1  und Limit 100 würden wir dann 0
+     * Einträge überspringen, für page 2 dann eben die ersten 100, page 2 die ersten 200 etc.
+     * 
+     * Außerdem wollen wir in unserer Rückgabe auch informieren, welceh Seite übergeben wurde
+     * und wie viel Seiten es insgesamt noch gibt
+     */
 
     result = await Photo.find()
         .skip((page - 1) * limit)

@@ -43,6 +43,17 @@ export const createPhoto = async (req, res, next) => {
 }
 
 export const getAllPhotos = async (req, res, next) => {
+    /**
+     * --PAGINATION Teil 1--
+     * Da unsere Collection abertausende Einträge haben kann, möchten wir mittels Pagination
+     * in der Lage sein wie in einem Buch die Einträge in Seiten aufzuteilen. Dafür erwarten wir
+     * in den Query Parametern welche Seite wir zurück geben sollen. Außerdem geben wir dem Nutzer der API
+     * die Mögklichkeit mit limit selber die Anzahl an zurückgegebenen Einträgen zu bestimmen.
+     * ERINNERUNG Query Parameter übergeben wir wie folgt: www.example.de/photos?page=3&limit=50
+     * Die beiden Variablen übergeben wir dann an unsere Modell Methode.
+     * 
+     * Weitere erklärung in unserem Fotomodell
+     */
     const {page = 1, limit = 100} = req.query
 
     if (limit > 100) {
@@ -51,6 +62,10 @@ export const getAllPhotos = async (req, res, next) => {
     }
 
     try {
+        //Anstatt getFiltered wäre natürlich die Methode get all sinniger und für gefilterte Einträge evtl
+        //eine neue Route anzulegen oder auch mit Query Parametern zu arbeiten
+
+        //let result = await Photo.getAll()
         let result = await Photo.getFiltered(+page, +limit)
         res.status(200).json(result)
     } catch (err) {
