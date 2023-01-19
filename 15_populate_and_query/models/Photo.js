@@ -59,7 +59,11 @@ export const create = async ({price, date, url, theme}) => {
 
 }
 
-/**
+export const getAll = async () => {
+
+    const photos = await Photo
+        .find()
+        /**
          * Wir speichern bei einer Referenz in unserem Model nur die ID, des Objekts auf das wir verweisen.
          * Wenn wir dann ein normalen find() machen, dann bekommen wir auch nur die ID
          * Um auch die Informationen aus der anderen Collection möchten dann können wir
@@ -74,10 +78,6 @@ export const create = async ({price, date, url, theme}) => {
          * dass wir sie nicht möchten mit -_id
          */
 
-export const getAll = async () => {
-
-    const photos = await Photo
-        .find()
         .populate("photographer", "-_id name email")
     return photos
 }
