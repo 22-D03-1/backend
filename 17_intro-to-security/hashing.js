@@ -56,7 +56,7 @@ const login = async ({username, password}) => {
     } 
     // Falls falsch sende error
     else {
-        console.error("Falsches Passwort")
+        console.error("Falsches Passwort", password)
         return
     }
 
@@ -104,13 +104,13 @@ const unsafeUser = {
 
 await signUp(unsafeUser)
 
-const performBruteForce = async () => {
+const performNumberBruteForce = async () => {
     for (let i=0; i<9999; i++) {
         let pwd = i.toString()
 
         pwd = "0".repeat(4-pwd.length)+i
 
-        if(i%100 == 0) {
+        if(i%10 == 0) {
             console.log("Prüfe Durchgang ", i)
         }
 
@@ -118,6 +118,47 @@ const performBruteForce = async () => {
 
         if(foundPassword) {
             console.log("Gefunden! ", pwd)
+            break
+        }
+    }
+}
+
+const findCombinations = (string, maxChar = 5) => {
+    let permutationsArray = []
+    if (maxChar == 0)
+        return [""]
+    for (let i = 0; i < string.length; i++){
+        let charCount = 1
+        while (charCount <= maxChar) {
+            for(let permutations of findCombinations(string, charCount-1)){
+                permutationsArray.push(string[i] + permutations)
+            }
+            charCount++
+        }
+    }
+    return permutationsArray
+}
+
+
+const unsafeUser2 = {
+    username: "tom",
+    password: "rol"
+}
+
+await signUp(unsafeUser2)
+
+const performBruteForce = async (maxChar = 3) => {
+    const letters = "abcdefghijklmnopqrstuvwxyz1234567890"
+
+    const combinations = findCombinations(letters, 2)
+
+    console.log(combinations)
+
+    for(let c of combinations){
+        const foundPassword = await login({username: "tom", password: c})
+
+        if(foundPassword) {
+            console.log("Gefunden! ", c)
             break
         }
     }
