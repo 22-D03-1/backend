@@ -6,6 +6,7 @@ import dotenv from "dotenv"
 dotenv.config()
 
 import "./lib/connect_db.js"
+import "./lib/auth_google.js"
 
 const app = express()
 const port = process.env.PORT || 4000

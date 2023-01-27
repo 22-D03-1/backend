@@ -48,3 +48,11 @@ export const login = async (req, res, next) => {
         return next(err)
     }
 }
+
+export const googleCallback = async (request, accessToken, refreshToken, profile, done) => {
+    const user = await authModel.findOrCreate(profile)
+    
+    if(user) {
+        done(null, user)
+    }
+  }
