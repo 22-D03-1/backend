@@ -28,9 +28,8 @@
             const email = document.querySelector("#email")
             const password = document.querySelector("#password")
 
-            fetch("http://localhost:4001/auth/login", {
+            fetch("/auth/login", {
                 method: "POST",
-                credentials: "include",
                 headers: {
                     "content-Type": "application/json"
                 },
