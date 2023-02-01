@@ -5,7 +5,7 @@ import {dirname} from "path"
 import { fileURLToPath } from 'url';
 
 import authRouter from "./routes/authRoutes.js"
-import {authorize} from "./middleware/auth.js"
+import {authorize, loggedIn} from "./middleware/auth.js"
 
 import dotenv from "dotenv"
 dotenv.config()
@@ -27,14 +27,11 @@ const __dirname = dirname(__filename);
 app.use(express.json())
 app.use(cookieParser())
 
-app.get("/", (req, res) => res.sendFile(__dirname + "/views/index.html"))
-app.get("/login", (req, res) => res.sendFile(__dirname + "/views/login.html"))
-app.get("/register", (req, res) => res.sendFile(__dirname + "/views/register.html"))
+app.get("/", authorize, (req, res) => res.sendFile(__dirname + "/views/index.html"))
+app.get("/login", loggedIn, (req, res) => res.sendFile(__dirname + "/views/login.html"))
+app.get("/register", loggedIn, (req, res) => res.sendFile(__dirname + "/views/register.html"))
 
 app.use("/auth", authRouter)
-app.get("/hidden", authorize, (req, res) => {
-    res.json("geheim")
-})
 
 app.use((err, req, res, next) => {
     console.log(err)

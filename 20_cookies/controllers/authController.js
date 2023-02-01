@@ -25,7 +25,6 @@ export const register = async (req, res, next) => {
 
 export const login = async (req, res, next) => {
 
-    console.log(req.cookies)
     // schauen ob nutzer existiert
     try {
         const user = await authModel.getOne({email: req.body.email})
@@ -45,10 +44,9 @@ export const login = async (req, res, next) => {
             //res.cookie("bezeichnung", "inhalt", "optionen")
             const expDate = 1000 * 60 * 60 * 24
             res.cookie("loggedIn", token, {
-                sameSite: "None",
-                secure: true,
+                sameSite: "lax",
                 maxAge: expDate,
-                httpOnly: false
+                httpOnly: true
             })
             //cookie per response zurückschicken
             res.json({message: "Erfolgreich eingeloggt", id: user._id})
@@ -60,6 +58,11 @@ export const login = async (req, res, next) => {
     } catch (err) {
         return next(err)
     }
+}
+
+export const logout = async(req, res) => {
+    res.clearCookie("loggedIn")
+    res.status(200).redirect("/login")
 }
 
 export const googleCallback = async (request, accessToken, refreshToken, profile, done) => {

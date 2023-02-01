@@ -45,7 +45,7 @@
                         return res.json()
                     }
                 })
-                .then(json => console.log(json))//window.location.href = 'index.html')
+                .then(json => window.location.href = '/')
                 .catch(err => {
                     document.querySelector("#error-message").innerText = err.message
                 })

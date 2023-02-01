@@ -7,6 +7,7 @@ const router = Router()
 router
     .post("/register", controller.register)
     .post("/login", controller.login)
+    .get("/logout", controller.logout)
     .get("/google", passport.authenticate('google', { scope:[ 'email' ] }))
     .get("/google/callback", passport.authenticate( 'google', {
         successRedirect: '/auth/google/success',
