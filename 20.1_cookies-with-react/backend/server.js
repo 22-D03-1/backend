@@ -2,10 +2,6 @@ import express from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
 
-//Die beiden imports benötigen wir, damit wir die html Dateien finden
-import {dirname} from "path"
-import { fileURLToPath } from 'url';
-
 import authRouter from "./routes/authRoutes.js"
 
 import dotenv from "dotenv"
@@ -17,18 +13,13 @@ import "./lib/auth_google.js"
 const app = express()
 const port = process.env.PORT || 4000
 
-// speichert unser aktuelles Verzeichnis in der Variable __dirname
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-
 // Das ewige Laster mit CORS... -.- Wenn Das Backend das Frontend ausliefert, benötigen wir cors nicht mehr
 // Falls doch müssen wir mit credentials: true zulassen, das der cookie mitgeschickt wird
 // In dem Fall können wir keine Wildcard (*) bei origina angeben, sondern genau sagen wo unsere Zugriffe herkommen
-/* app.use(cors({
-    origin: "http://127.0.0.1:5500",
+app.use(cors({
+    origin: "http://localhost:3000",
     credentials: true
-})) */
+})) 
 
 app.use(express.json())
 
