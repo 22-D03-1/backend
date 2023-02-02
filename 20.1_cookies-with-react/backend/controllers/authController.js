@@ -1,5 +1,8 @@
 import bcrypt from "bcrypt"
 
+import dotenv from "dotenv";
+dotenv.config();
+
 import { signToken } from "../lib/token.js"
 
 import * as authModel from "../models/User.js"
@@ -61,11 +64,15 @@ export const login = async (req, res, next) => {
 
             const token = signToken({id: user._id})
             //token einem cookie hinzufügen
-            const expDate = 1000 * 60 * 60 * 24
-            res.cookie("loggedIn", token, {
+            res.cookie("jwt", token, {
                 sameSite: "lax",
-                maxAge: expDate,
+                maxAge: process.env.MAXAGE_COOKIE,
                 httpOnly: true
+            })
+            res.cookie("loggedIn", user._id.toString(), {
+                sameSite: "lax",
+                maxAge: process.env.MAXAGE_COOKIE,
+                httpOnly: false
             })
             //cookie per response zurückschicken
             res.json({message: "Erfolgreich eingeloggt", id: user._id})
@@ -85,9 +92,15 @@ export const login = async (req, res, next) => {
  * mehr mitgeschickt.
  */
 
-export const logout = async(req, res) => {
+export const logout = async(req, res, next) => {
     res.clearCookie("loggedIn")
-    res.status(200).redirect("/login")
+    res.clearCookie("jwt")
+    req.logOut(function(err) {
+        if (err) { 
+            return next(err)
+        }
+        res.status(200).send()
+      })
 }
 
 export const googleCallback = async (request, accessToken, refreshToken, profile, done) => {

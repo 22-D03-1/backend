@@ -8,12 +8,18 @@ router
     .post("/register", controller.register)
     .post("/login", controller.login)
     .get("/logout", controller.logout)
-    .get("/google", passport.authenticate('google', { scope:[ 'email' ] }))
+    .get("/google", passport.authenticate(
+        'google', 
+        { scope:[ 'email' ]
+     }))
     .get("/google/callback", passport.authenticate( 'google', {
-        successRedirect: '/auth/google/success',
+        successRedirect: "/auth/google/success",
         failureRedirect: '/auth/google/failure'
     }))
-    .get("/google/success", (req, res) => res.send("google sucess"))
+    .get("/google/success", (req, res) => {
+        res.cookie("loggedIn", req.session.passport.user)
+        res.redirect("http://localhost:3000")
+    })
     .get("/google/failure", (req, res) => res.send("google fail"))
 
 export default router

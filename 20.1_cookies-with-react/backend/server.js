@@ -1,6 +1,8 @@
 import express from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
+import session from "express-session"
+import passport from "passport"
 
 import authRouter from "./routes/authRoutes.js"
 
@@ -12,6 +14,15 @@ import "./lib/auth_google.js"
 
 const app = express()
 const port = process.env.PORT || 4000
+
+app.use(passport.initialize())
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUnitialized: false,
+    store: new session.MemoryStore(),
+    cookie: {maxAge: +process.env.MAXAGE_COOKIE}
+}))
 
 // Das ewige Laster mit CORS... -.- Wenn Das Backend das Frontend ausliefert, benötigen wir cors nicht mehr
 // Falls doch müssen wir mit credentials: true zulassen, das der cookie mitgeschickt wird

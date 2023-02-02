@@ -12,3 +12,11 @@ passport.use(new Strategy({
     passReqToCallback   : true
   }, googleCallback
 ));
+
+passport.serializeUser((user,done)=>{
+  done(null,user.id)
+})
+
+passport.deserializeUser((user,done)=>{
+  done(null,user)
+})

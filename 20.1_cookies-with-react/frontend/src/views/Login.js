@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-export default function ({setLoggedInUser}) {
+export default function ({loggedInUser, setLoggedInUser}) {
 
     const [state, setState] = useState({
         emailInput: "",
@@ -36,6 +36,11 @@ export default function ({setLoggedInUser}) {
         })
         .catch((err) => setState({...state, errorMessage: err.message}))
     }
+
+    useEffect(()=>{
+        console.log(loggedInUser)
+        if(loggedInUser) navigate("/")
+    },[loggedInUser])
 
     return (
         <>
